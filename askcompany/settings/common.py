@@ -45,7 +45,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Third Apps
     'debug_toolbar',
+    'bootstrap4',
     # Locals Apps
+    'accounts',
     
 ]
 
@@ -92,6 +94,9 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
+AUTH_USER_MODEL = "accounts.User"
 
 
 # Password validation
