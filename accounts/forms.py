@@ -19,6 +19,6 @@ class SignupForm(UserCreationForm):
         email = self.cleaned_data.get('email')
         if email:
             qs = User.objects.filter(email=email)
-            if qs.exists:
+            if qs.exists():
                 raise forms.ValidationError("이미 등록된 이메일 주소입니다.")
         return email
