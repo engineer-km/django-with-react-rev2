@@ -42,8 +42,7 @@
                                   </a>
                                   
                                   <a class="me-3 py-2 text-dark text-decoration-none" href="#">
-                                    {{ user }}
-                                    Profile
+                                    <img src="{% url "pydenticon_image" user.username %}" style="width: 24px; height: 24px;" />
                                   </a>
                                 </nav>
                             </div>
