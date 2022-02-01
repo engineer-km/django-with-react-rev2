@@ -1,8 +1,8 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import PostForm
-from .models import Tag
+from .models import Post
 
 
 @login_required
@@ -24,3 +24,10 @@ def post_new(request):
         { "form": form, }
     )
     
+
+def post_detail(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    return render(
+        request, "instagram/post_detail.html", 
+        { 'post': post, }
+    )

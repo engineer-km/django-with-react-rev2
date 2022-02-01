@@ -1,6 +1,8 @@
+from pydoc import resolve
 from turtle import title
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
+from django.shortcuts import resolve_url
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.conf import settings
@@ -22,6 +24,17 @@ class User(AbstractUser):
     avatar = models.ImageField(blank=True, 
                                upload_to="accounts/avatar/%Y%m%d",
                                help_text="48px * 48px 크기의 png/jpg 파일을 업로드 해주세요.")
+
+    @property
+    def name(self):
+        return "{} {}".format(self.first_name, self.last_name)
+    
+    @property
+    def avatar_url(self):
+        if self.avatar:
+            return self.avatar.url
+        else:
+            return resolve_url('pydenticon_image', self.username)
 
     def send_welcome_email(self):
         subject = render_to_string(
