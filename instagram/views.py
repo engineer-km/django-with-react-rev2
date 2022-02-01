@@ -7,6 +7,13 @@ from .models import Post
 
 
 @login_required
+def index(request):
+    return render(
+        request, 'instagram/index.html', {}
+    )
+
+
+@login_required
 def post_new(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
@@ -34,7 +41,6 @@ def post_detail(request, pk):
     )
     
 
-@login_required
 def user_page(request, username):
     page_user = get_object_or_404(
         get_user_model(), username=username, is_active=True
