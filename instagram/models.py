@@ -13,12 +13,18 @@ class BaseModel(models.Model):
 
 
 class Post(BaseModel):
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    # user
+    # -> Post.objects.filter(author=user)
+    # -> user.post_set.all()  # related_name 설정을 안할 경우, post_set 으로 자동으로 related_name이 설정된다.
+    # `author` 과 `like_user_set` related_name을 설정하지 않고 자동으로 둘 경우
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='my_post_set',
+                               on_delete=models.CASCADE)
     photo = models.ImageField(upload_to='instagram/post/%Y%m%d')
     caption = models.CharField(max_length=500)
     tag_set = models.ManyToManyField('Tag', blank=True)
     location = models.CharField(max_length=100)
-
+    like_user_set = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True,
+                                           related_name='like_post_set')
 
     def __str__(self):
         return self.caption
@@ -34,6 +40,11 @@ class Post(BaseModel):
     def get_absolute_url(self):
         return reverse("instagram:post_detail", args=[self.pk])
     
+    def is_like_user(self, user):
+        return self.like_user_set.filter(pk=user.pk).exists()
+    
+    class Meta:
+        ordering = ['-id']
 
 
 class Tag(models.Model):
