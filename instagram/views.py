@@ -8,8 +8,16 @@ from .models import Post
 
 @login_required
 def index(request):
+    suggested_user_list = get_user_model().objects.all()\
+        .exclude(pk=request.user.pk)\
+        .exclude(pk__in=request.user.following_set.all())[:3]
+        # 전체 유저중 login 한 유저는 제외하고
+        # 유저`가 팔로우한 유저`는 제외한다.
+    request.user.following_set.all()
+    
     return render(
-        request, 'instagram/index.html', {}
+        request, 'instagram/index.html', 
+        {"suggested_user_list": suggested_user_list,}
     )
 
 

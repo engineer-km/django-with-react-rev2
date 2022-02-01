@@ -15,6 +15,10 @@ class User(AbstractUser):
         MALE = "M", "남성"
         FEMAIL = "F", "여성"
 
+    # User 간의 관계
+    follower_set = models.ManyToManyField("self", blank=True, symmetrical=False)  # 유저`를` 팔로우한 사람
+    following_set = models.ManyToManyField("self", blank=True) # 유저`가` 팔로잉 하는 사람
+
     website_url = models.URLField(blank=True)
     bio = models.TextField(blank=True)
     phone_number = models.CharField(max_length=13, blank=True, 
