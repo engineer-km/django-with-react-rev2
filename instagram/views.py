@@ -65,9 +65,19 @@ def user_page(request, username):
     )
     post_list = Post.objects.filter(author=page_user)
     post_list_count = post_list.count() # 실제 데이터베이스에 count 퀴리를 던지게 됨.
+ 
+    if request.user.is_authenticated:
+        # 로그인이 되어있을때
+        is_follow = request.user.following_set.filter(pk=page_user.pk).exists()
+        # 현재 유저의 following_set 중에 `조회한(페이지) 유저의 PK`가 존재하는 지 확인
+    else:
+        # 로그인이 안 되어있을때
+        is_follow = False
+
     return render(
         request, 'instagram/user_page.html',
         {'page_user': page_user, 
          'post_list': post_list,
-         'post_list_count': post_list_count,}
+         'post_list_count': post_list_count,
+         'is_follow': is_follow,}
     )

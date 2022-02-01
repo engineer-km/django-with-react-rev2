@@ -14,6 +14,8 @@
                     <div class="mb-3">
                         {% include "instagram/_post_card.html" %}
                     </div>
+                {% empty %}
+                    포스팅이 없습니다.
                 {% endfor %}
             </div>
 

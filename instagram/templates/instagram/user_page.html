@@ -14,6 +14,12 @@
                     Edit Profile 
                 </a>
 
+                {% if is_follow %}
+                    <a href="{% url "user_unfollow"  page_user.username %}">Unfollow</a>
+                {% else %}
+                    <a href="{% url "user_follow"  page_user.username %}">Follow</a>
+                {% endif %}
+
                 <hr/>
                 {{ post_list_count }} posts, 0 folloers, 0 following
                 <hr/>
