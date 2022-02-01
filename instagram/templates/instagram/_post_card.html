@@ -1,4 +1,4 @@
-{% load instagram_tags %}
+{% load humanize instagram_tags %}
 
 
 <div class="card">
@@ -11,29 +11,54 @@
 
     <div class="card-body">
         <img src="{{ post.photo.url }}" style="width: 100%;" />
-        {% for tag in post.tag_set.all %}
-            <span class="badge bg-primary">
-                #{{ tag.name }}
-            </span>
-        {% endfor %}
+
+        <div>
+            {# {{ post.is_like_user(user) }}   지원하지않는 template 임. 인수를 넘겨주려면 template 를 새로 만들어서 등록해야됨. #}
+            {# {{ post|is_like_user:user }} #} {# 첫번째 인자|함수:두번째 이후 부터의 인자들#}
+            {% if post|is_like_user:user %}
+                {# 좋아요 일 경우#}
+                <a href="{% url "instagram:post_unlike" post.pk %}" style="color: inherit;">
+                    <i class="fas fa-heart"></i>
+                </a>
+            {% else %}
+                {# 좋아요가 아닐 경우 #}
+                <a href="{% url "instagram:post_like" post.pk %}" style="color: inherit;">
+                    <i class="far fa-heart"></i>
+                </a>
+            {% endif %}
+        </div>
+
+        <div class="comment-list mt-3">
+            {% for comment in  post.comment_set.all %}
+                <div class="comment">
+                    <strong> {{ comment.author }} </strong>
+                    {{ comment.message }}
+                    <small class="text-muted"> {{ comment.created_at|naturaltime }} </small>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div>
+            {% for tag in post.tag_set.all %}
+                <span class="badge bg-primary">
+                    #{{ tag.name }}
+                </span>
+            {% endfor %}
+        </div>
+
+        <div>
+            <a href="{{ post.get_absolute_url }}" style="" class="text-muted">
+                <small>
+                    {{ post.created_at|naturaltime }}
+                </samll>
+            </a>
+        </div>
+
     </div>
 
     <div class="card-footer">
-        
-        {# {{ post.is_like_user(user) }}   지원하지않는 template 임. 인수를 넘겨주려면 template 를 새로 만들어서 등록해야됨. #}
-
-        {# {{ post|is_like_user:user }} #} {# 첫번째 인자|함수:두번째 이후 부터의 인자들#}
-        
-        {% if post|is_like_user:user %}
-            {# 좋아요 일 경우#}
-            <a href="{% url "instagram:post_unlike" post.pk %}" style="color: inherit;">
-                <i class="fas fa-heart"></i>
-            </a>
-        {% else %}
-            {# 좋아요가 아닐 경우 #}
-            <a href="{% url "instagram:post_like" post.pk %}" style="color: inherit;">
-                <i class="far fa-heart"></i>
-            </a>
-        {% endif %}
+        <a href="{% url "instagram:comment_new" post.pk %}">
+            댓글 쓰기
+        </a>
     </div>
 </div>
