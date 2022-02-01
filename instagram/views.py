@@ -1,18 +1,24 @@
+from datetime import timedelta
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.contrib.auth import get_user_model
 from django.contrib import messages
+from django.utils import timezone
 from .forms import PostForm
 from .models import Post
 
 
 @login_required
 def index(request):
+    timesince = timezone.now() - timedelta(days=3)  # 최근 시간에서 3일을 뺀
     post_list = Post.objects.all()\
         .filter(
             Q(author=request.user) |
             Q(author__in=request.user.following_set.all())
+        )\
+        .filter(
+            created_at__gte=timesince
         )
     # 작성자가 자기자신의 post list 또는
     # 유저`가 팔로우한 유저`의 Post List
